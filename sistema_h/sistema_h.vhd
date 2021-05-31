@@ -29,14 +29,13 @@ end sistema_h;
 ------------------------------------------------------------
 architecture rtl of sistema_h is
 ------- Declaracion de señales internas --------------------
-	signal rst, rst_neg, clk_1: std_logic;
+	signal rst, clk_1: std_logic;
 	signal sel_cont_sincro: std_logic_vector(1 downto 0);
 	signal cont_lfsr: std_logic_vector(31 downto 0) := (others => '0');
 	signal cont_bcd, cont_down, cont_up, cont_lfsr_i: std_logic_vector(3 downto 0) := (others => '0');
 begin
 	
 ------ Señales auxiliares para la correcta instanciacion ---
-	rst_neg <= not(rst);
 	cont_lfsr_i <= cont_lfsr(3 downto 0);
 	clk_div <= clk_1;
 ------ Instanciacion de todos los componentes --------------
@@ -47,10 +46,10 @@ begin
 	U3: entity work.Sincro port map(D => sel_cont(1), CLK => clk_50, RST => rst, Q => sel_cont_sincro(1));
 	
 	U4: entity work.div_frec port map(clk_50 => clk_50, sel => "010", clk_sel => clk_1, sal1_7seg => frec_uni, sal2_7seg => frec_deci);
-	U5: entity work.sel_cont_lfsr port map(clk => clk_1, rst => rst_neg, sal_lfsr => cont_lfsr, sel => "00");
-	U6: entity work.cont_BCD port map(clk => clk_1, rst => rst_neg, bcd => cont_bcd);
-	U7: entity work.cont_bin_down port map(clk => clk_1, rst => rst_neg, bin_down => cont_down);
-	U8: entity work.cont_bin_up port map(clk => clk_1, rst => rst_neg, bin_up => cont_up);
+	U5: entity work.sel_cont_lfsr port map(clk => clk_1, rst => rst, sal_lfsr => cont_lfsr, sel => "00");
+	U6: entity work.cont_BCD port map(clk => clk_1, rst => rst, bcd => cont_bcd);
+	U7: entity work.cont_bin_down port map(clk => clk_1, rst => rst, bin_down => cont_down);
+	U8: entity work.cont_bin_up port map(clk => clk_1, rst => rst, bin_up => cont_up);
 	U9: entity work.recver port map(selmux => sel_cont_sincro, cbcd1 => cont_lfsr_i, cbcd2 => cont_bcd, cbcd3 => cont_down, cbcd4 => cont_up, salr => num_bcd);
 
 end rtl;

@@ -1,3 +1,4 @@
+
 -- Descripcion: Simulacion funcional del Bloque de Contadores por medio de
 -- 				 un Test Bench
 

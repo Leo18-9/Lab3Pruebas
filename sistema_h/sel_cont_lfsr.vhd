@@ -71,7 +71,7 @@ begin
 			when "00" =>
 				ancho_lfsr := ancho_lfsr_a;
 				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '1') then 
+				if(rst= '0') then 
 					sal_lfsr_i <= (0 => '1', others => 'Z');
 					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
 				else
@@ -80,7 +80,7 @@ begin
 			when "01" =>
 				ancho_lfsr := ancho_lfsr_b;
 				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '1') then 
+				if(rst= '0') then 
 					sal_lfsr_i <= (0 => '1', others => 'Z');
 					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
 				else
@@ -89,7 +89,7 @@ begin
 			when "10" =>
 				ancho_lfsr := ancho_lfsr_c;
 				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '1') then 
+				if(rst= '0') then 
 					sal_lfsr_i <= (0 => '1', others => 'Z');
 					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
 				else
@@ -97,7 +97,7 @@ begin
 				end if;
 			when others =>
 				ancho_lfsr := ancho_lfsr_d;
-				if(rst= '1') then 
+				if(rst= '0') then 
 					sal_lfsr_i <= (0 => '1', others => 'Z');
 					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
 				else
