@@ -50,7 +50,7 @@ begin
 ------ Instanciacion del PLL -------------------------------
 div_pll_inst : div_pll PORT MAP (
 		areset	 => areset_sig,
-		inclk0	 => inclk0_sig,
+		inclk0	 => inclk0_sig, -- En el PLL el reset es activo en alto y en tu contador es activo en bajo. Cuando uno funciona, el otro no.
 		c0	 => c0_sig,
 		locked	 => locked_sig);
 

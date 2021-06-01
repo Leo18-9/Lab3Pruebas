@@ -76,7 +76,7 @@ begin
 ------ Proceso de seleccion de largo del ------------------
 ------ contador LFSR --------------------------------------
 	sel_proc: Process (rst, clk_div, sel)
-		variable ancho_lfsr: integer;
+		variable ancho_lfsr: integer; -- Se debe indicar el rango, por ejemplo: integer(32 downto 0) 
 	begin
 	--- El cambio entre un contador y otro se debe ---------
 	--- realizar un reset para inicializar todas las -------
@@ -86,18 +86,18 @@ begin
 			when "00" =>
 				ancho_lfsr := ancho_lfsr_a;
 				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '0') then 
-					sal_lfsr_i <= (0 => '1', others => 'Z');
-					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
-				else
+				if(rst= '0') then 											-- Esto se repite en todo el proceso. 
+					sal_lfsr_i <= (0 => '1', others => 'Z');				-- Se podría optimizar.
+					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');	--	
+				else														--
 					sal_lfsr_i(ancho_lfsr-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr-1 downto 1); 
 				end if;
 			when "01" =>
 				ancho_lfsr := ancho_lfsr_b;
 				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
 				if(rst= '0') then 
-					sal_lfsr_i <= (0 => '1', others => 'Z');
-					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
+					sal_lfsr_i <= (0 => '1', others => 'Z');				-- Las señales 'Z' rara vez se usan. Solo en buses de comunicación. Además tus decoficadores BCD a 7 segmentos no lo usa. 
+					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');	
 				else
 					sal_lfsr_i(ancho_lfsr-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr-1 downto 1); 
 				end if;
@@ -121,6 +121,8 @@ begin
 		end case;
 		end if;
 	end process sel_proc;
+			-- Cambiaría la señal sal_lfsr_i por una auxiliar en el proceso y haría la siguiente asignación: sal_lfsr_i <= sal_lfsr_i.
+			-- Para evitar que se cree un latch, ya que no están contempladas todas las posibilidades del if en el proceso.
 	
 ---- Asignacion del valor de salida ---------------------
 	--sal_lfsr <= sal_lfsr_i;
