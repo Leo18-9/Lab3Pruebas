@@ -36,7 +36,7 @@ architecture rtl of sel_cont_lfsr is
 	signal sal_lfsr_i : std_logic_vector(31 downto 0) := (0 => '1', others => '0');  
 	signal serial_in : std_logic; 
 	signal realim : std_logic;
-begin
+begin		
 
 ------ Entrada Serie al Contador LFSR ----------------------
 	serial_in <= realim;
@@ -56,8 +56,7 @@ begin
 				realim <= sal_lfsr_i(22) xor sal_lfsr_i(2) xor sal_lfsr_i(1) xor sal_lfsr_i(0);
 		end case;
 	end process realim_proc;
-			
-
+	
 ------ Proceso de seleccion de largo del ------------------
 ------ contador LFSR --------------------------------------
 	sel_proc: Process (rst, clk, sel)
@@ -66,47 +65,25 @@ begin
 	--- El cambio entre un contador y otro se debe ---------
 	--- realizar un reset para inicializar todas las -------
 	--- salidas (Alta impedancia) --------------------------
-		if(rising_edge(clk)) then
+		if(rst= '0') then 
+			sal_lfsr_i <= (0 => '1', others => '0');
+		elsif(rising_edge(clk)) then
 		case sel is 
 			when "00" =>
-				ancho_lfsr := ancho_lfsr_a;
-				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '0') then 
-					sal_lfsr_i <= (0 => '1', others => 'Z');
-					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
-				else
-					sal_lfsr_i(ancho_lfsr-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr-1 downto 1); 
-				end if;
+				sal_lfsr_i(31 downto ancho_lfsr_a) <= (others => 'Z');
+				sal_lfsr_i(ancho_lfsr_a-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr_a-1 downto 1); 
 			when "01" =>
-				ancho_lfsr := ancho_lfsr_b;
-				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '0') then 
-					sal_lfsr_i <= (0 => '1', others => 'Z');
-					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
-				else
-					sal_lfsr_i(ancho_lfsr-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr-1 downto 1); 
-				end if;
+				sal_lfsr_i(31 downto ancho_lfsr_b) <= (others => 'Z');
+				sal_lfsr_i(ancho_lfsr_b-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr_b-1 downto 1); 
 			when "10" =>
-				ancho_lfsr := ancho_lfsr_c;
-				sal_lfsr_i(31 downto ancho_lfsr) <= (others => 'Z');
-				if(rst= '0') then 
-					sal_lfsr_i <= (0 => '1', others => 'Z');
-					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
-				else
-					sal_lfsr_i(ancho_lfsr-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr-1 downto 1); 
-				end if;
+				sal_lfsr_i(31 downto ancho_lfsr_c) <= (others => 'Z');
+				sal_lfsr_i(ancho_lfsr_c-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr_c-1 downto 1); 
 			when others =>
-				ancho_lfsr := ancho_lfsr_d;
-				if(rst= '0') then 
-					sal_lfsr_i <= (0 => '1', others => 'Z');
-					sal_lfsr_i(ancho_lfsr-1 downto 1) <= (others => '0');
-				else
-					sal_lfsr_i(ancho_lfsr-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr-1 downto 1); 
-				end if;
+				sal_lfsr_i(ancho_lfsr_d-1 downto 0) <= serial_in & sal_lfsr_i(ancho_lfsr_d-1 downto 1); 
 		end case;
 		end if;
 	end process sel_proc;
 	
 ---- Asignacion del valor de salida ---------------------
 	sal_lfsr <= sal_lfsr_i;
-end rtl;
+end rtl; 
